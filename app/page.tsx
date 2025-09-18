@@ -144,7 +144,7 @@ export default function QRWithLogo() {
   }
 
   return (
-    <div className="min-h-screen flex items-start justify-center p-6 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow p-6">
         <h2 className="text-xl font-semibold mb-4">
           QR Code Generator — with centered PNG logo
@@ -164,7 +164,7 @@ export default function QRWithLogo() {
           Upload PNG logo (transparent recommended)
        </label>
 
-       <div className="mt-2 flex items-center gap-3">
+        <div className="mt-2 flex flex-wrap gap-3">
           {/* Hidden file input */}
           <input
             id="logoUpload"
@@ -174,33 +174,35 @@ export default function QRWithLogo() {
             className="hidden"
           />
 
-          {/* Full button for file upload */}
+          {/* Upload Button */}
           <button
             type="button"
             onClick={() => document.getElementById("logoUpload")?.click()}
-            className="cursor-pointer px-2 py-1 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700"
+            className="cursor-pointer px-3 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700"
           >
             Upload Logo
           </button>
 
-          {/* Show filename if selected */}
+          {/* Filename */}
           {logoFile && (
-            <span className="text-sm text-gray-600">Selected: {logoFile.name}</span>
+            <span className="text-sm text-gray-600 self-center">
+              Selected: {logoFile.name}
+            </span>
           )}
-        </div>
 
-
-        <div className="flex gap-2 mt-6">
+          {/* Generate Button */}
           <button
             onClick={generate}
-            className="cursor-pointer px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+            className="cursor-pointer px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             disabled={generating}
           >
             {generating ? "Generating..." : "Generate QR"}
           </button>
+
+          {/* Download Button */}
           <button
             onClick={downloadPNG}
-            className="cursor-pointer px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+            className="cursor-pointer px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
           >
             Download PNG
           </button>
@@ -237,6 +239,29 @@ export default function QRWithLogo() {
 
         <div className="mt-6 border-t pt-4 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">
           {/* Left side */}
+          <div className="flex gap-3 text-gray-500">
+            <a href="https://www.linkedin.com/in/toukir-ahamed-09477b28a/" target="_blank" className="hover:text-blue-600 transition-colors">
+              <FaLinkedin size={18} />
+            </a>
+            <a href="https://www.facebook.com/pigeonicsoft" target="_blank" className="hover:text-blue-700 transition-colors">
+              <FaFacebookF size={18} />
+            </a>
+            <a href="https://www.instagram.com/toukirahamedpigeon/" target="_blank" className="hover:text-pink-500 transition-colors">
+              <FaInstagram size={18} />
+            </a>
+            <a href="https://medium.com/@toukir.ahamed.pigeon" target="_blank" className="hover:text-black transition-colors">
+              <FaMediumM size={18} />
+            </a>
+            <a href="https://x.com/AhamedPigeon" target="_blank" className="hover:text-blue-400 transition-colors">
+              <FaTwitter size={18} />
+            </a>
+            <a href="https://www.quora.com/profile/Toukir-Ahamed-Pigeon" target="_blank" className="hover:text-red-600 transition-colors">
+              <FaQuora size={18} />
+            </a>
+          </div>
+          
+
+          {/* Right side: social icons */}
           <div className="mb-2 md:mb-0">
             Developed by{" "}
             <a
@@ -248,28 +273,6 @@ export default function QRWithLogo() {
               Pigeonic
             </a>{" "}
             &copy; 2025 | Version 1.0.0
-          </div>
-
-          {/* Right side: social icons */}
-          <div className="flex gap-3 text-gray-500">
-            <a href="https://www.linkedin.com/in/toukir-ahamed-09477b28a/" className="hover:text-blue-600 transition-colors">
-              <FaLinkedin size={18} />
-            </a>
-            <a href="https://www.facebook.com/pigeonicsoft" className="hover:text-blue-700 transition-colors">
-              <FaFacebookF size={18} />
-            </a>
-            <a href="https://www.instagram.com/toukirahamedpigeon/" className="hover:text-pink-500 transition-colors">
-              <FaInstagram size={18} />
-            </a>
-            <a href="https://medium.com/@toukir.ahamed.pigeon" className="hover:text-black transition-colors">
-              <FaMediumM size={18} />
-            </a>
-            <a href="https://x.com/AhamedPigeon" className="hover:text-blue-400 transition-colors">
-              <FaTwitter size={18} />
-            </a>
-            <a href="https://www.quora.com/profile/Toukir-Ahamed-Pigeon" className="hover:text-red-600 transition-colors">
-              <FaQuora size={18} />
-            </a>
           </div>
         </div>
 
