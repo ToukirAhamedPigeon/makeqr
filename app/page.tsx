@@ -2,6 +2,8 @@
 
 import React, { useRef, useState } from "react";
 import QRCode from "qrcode";
+import { FaLinkedin, FaFacebookF, FaInstagram, FaMediumM, FaTwitter, FaQuora } from "react-icons/fa";
+
 
 export default function QRWithLogo() {
   const [value, setValue] = useState("https://example.com");
@@ -69,11 +71,11 @@ export default function QRWithLogo() {
         const logoScale = 0.2;
         const logoSize = displaySize * logoScale;
 
-        const bgPadding = Math.floor(logoSize * 0.05);
+        const bgPadding = Math.floor(logoSize * 0.02);
         const bgSize = logoSize + bgPadding * 2;
         const bgX = Math.floor((displaySize - bgSize) / 2);
         const bgY = Math.floor((displaySize - bgSize) / 2);
-        const radius = Math.floor(bgSize * 0.1);
+        const radius = Math.floor(bgSize * 0.15);
 
         roundRect(ctx, bgX, bgY, bgSize, bgSize, radius, "#ffffff");
 
@@ -233,12 +235,44 @@ export default function QRWithLogo() {
           </div>
         </div>
 
-        <div className="mt-6 text-xs text-gray-500">
-          Note: This component uses the <code>qrcode</code> npm package on the
-          client to draw a QR onto a canvas, then overlays a centered PNG. Add{" "}
-          <code>npm install qrcode</code> to your project and ensure this
-          component runs client-side.
+        <div className="mt-6 border-t pt-4 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">
+          {/* Left side */}
+          <div className="mb-2 md:mb-0">
+            Developed by{" "}
+            <a
+              href="https://pigeonic.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              Pigeonic
+            </a>{" "}
+            &copy; 2025 | Version 1.0.0
+          </div>
+
+          {/* Right side: social icons */}
+          <div className="flex gap-3 text-gray-500">
+            <a href="https://www.linkedin.com/in/toukir-ahamed-09477b28a/" className="hover:text-blue-600 transition-colors">
+              <FaLinkedin size={18} />
+            </a>
+            <a href="https://www.facebook.com/pigeonicsoft" className="hover:text-blue-700 transition-colors">
+              <FaFacebookF size={18} />
+            </a>
+            <a href="https://www.instagram.com/toukirahamedpigeon/" className="hover:text-pink-500 transition-colors">
+              <FaInstagram size={18} />
+            </a>
+            <a href="https://medium.com/@toukir.ahamed.pigeon" className="hover:text-black transition-colors">
+              <FaMediumM size={18} />
+            </a>
+            <a href="https://x.com/AhamedPigeon" className="hover:text-blue-400 transition-colors">
+              <FaTwitter size={18} />
+            </a>
+            <a href="https://www.quora.com/profile/Toukir-Ahamed-Pigeon" className="hover:text-red-600 transition-colors">
+              <FaQuora size={18} />
+            </a>
+          </div>
         </div>
+
       </div>
     </div>
   );
