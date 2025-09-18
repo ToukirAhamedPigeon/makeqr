@@ -144,7 +144,7 @@ export default function QRWithLogo() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center p-1 bg-gray-50">
       <div className="w-full max-w-3xl bg-white rounded-2xl shadow p-6">
         <h2 className="text-xl font-semibold mb-4">
           QR Code Generator — with centered PNG logo
@@ -164,48 +164,52 @@ export default function QRWithLogo() {
           Upload PNG logo (transparent recommended)
        </label>
 
-        <div className="mt-2 flex flex-wrap gap-3">
-          {/* Hidden file input */}
-          <input
-            id="logoUpload"
-            type="file"
-            accept="image/png"
-            onChange={handleFile}
-            className="hidden"
-          />
+        <div className="mt-2 flex flex-col md:flex-row">
+          <div className="flex gap-3">
+            {/* Hidden file input */}
+            <input
+              id="logoUpload"
+              type="file"
+              accept="image/png"
+              onChange={handleFile}
+              className="hidden"
+            />
 
-          {/* Upload Button */}
-          <button
-            type="button"
-            onClick={() => document.getElementById("logoUpload")?.click()}
-            className="cursor-pointer px-3 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700"
-          >
-            Upload Logo
-          </button>
+            {/* Upload Button */}
+            <button
+              type="button"
+              onClick={() => document.getElementById("logoUpload")?.click()}
+              className="cursor-pointer px-3 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700"
+            >
+              Upload Logo
+            </button>
 
-          {/* Filename */}
-          {logoFile && (
-            <span className="text-sm text-gray-600 self-center">
-              Selected: {logoFile.name}
-            </span>
-          )}
+            {/* Filename */}
+            {logoFile && (
+              <span className="text-sm text-gray-600 self-center">
+                Selected: {logoFile.name}
+              </span>
+            )}
 
-          {/* Generate Button */}
-          <button
-            onClick={generate}
-            className="cursor-pointer px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            disabled={generating}
-          >
-            {generating ? "Generating..." : "Generate QR"}
-          </button>
+          </div>
+          <div className="flex gap-3">
+            {/* Generate Button */}
+            <button
+              onClick={generate}
+              className="cursor-pointer px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              disabled={generating}
+            >
+              {generating ? "Generating..." : "Generate QR"}
+            </button>
 
-          {/* Download Button */}
-          <button
-            onClick={downloadPNG}
-            className="cursor-pointer px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            Download PNG
-          </button>
+            {/* Download Button */}
+            <button
+              onClick={downloadPNG}
+              className="cursor-pointer px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            >
+              Download PNG
+            </button>
+          </div>
         </div>
 
         {error && <div className="mt-4 text-red-600">{error}</div>}
