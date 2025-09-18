@@ -139,7 +139,13 @@ export default function QRWithLogo() {
     const canvas = canvasRef.current!;
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
-    link.download = "qr-with-logo.png";
+
+    // Add timestamp for uniqueness
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[-:.TZ]/g, ""); // remove invalid chars for filenames
+    link.download = `qr-with-logo-${timestamp}.png`;
+
     link.click();
   }
 
