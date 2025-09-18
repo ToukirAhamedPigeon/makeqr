@@ -151,7 +151,7 @@ export default function QRWithLogo() {
           Upload PNG logo (transparent recommended)
        </label>
 
-        <div className="mt-2 flex items-center gap-3">
+       <div className="mt-2 flex items-center gap-3">
           {/* Hidden file input */}
           <input
             id="logoUpload"
@@ -161,13 +161,13 @@ export default function QRWithLogo() {
             className="hidden"
           />
 
-          {/* Styled upload button */}
+          {/* Full button for file upload */}
           <button
             type="button"
             onClick={() => document.getElementById("logoUpload")?.click()}
-            className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800"
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700"
           >
-            Choose File
+            Upload Logo
           </button>
 
           {/* Show filename if selected */}
