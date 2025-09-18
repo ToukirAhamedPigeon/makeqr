@@ -145,15 +145,12 @@ export default function QRWithLogo() {
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Liquid Colorful Background */}
+      {/* Deep Aqua-Blue Liquid Background (no white shadows) */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-        {/* Top-left blob */}
         <div className="absolute w-[120%] h-[120%] -top-10 -left-10
           bg-gradient-to-r from-[#43cea2] to-[#185a9d]
           animate-spin-slow rounded-full blur-[140px] opacity-70">
         </div>
-
-        {/* Bottom-right blob */}
         <div className="absolute w-[120%] h-[120%] -bottom-10 -right-10
           bg-gradient-to-r from-[#43cea2] to-[#185a9d]
           animate-spin-slow-reverse rounded-full blur-[140px] opacity-70">
