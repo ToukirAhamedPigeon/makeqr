@@ -165,7 +165,7 @@ export default function QRWithLogo() {
        </label>
 
         <div className="mt-2 flex flex-col md:flex-row">
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full md:w-[50%] mb-2 md:mb-0">
             {/* Hidden file input */}
             <input
               id="logoUpload"
@@ -192,7 +192,7 @@ export default function QRWithLogo() {
             )}
 
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 w-full md:w-[50%] mb-2 md:mb-0 justify-end">
             {/* Generate Button */}
             <button
               onClick={generate}
