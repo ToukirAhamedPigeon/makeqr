@@ -230,7 +230,7 @@ export default function QRWithLogo() {
         >
           {logoPreview && (
             <div className="col-span-1">
-              <div className="text-sm mb-2">Logo Preview</div>
+              <div className="text-sm mb-2 font-bold text-gray-900">Logo Preview</div>
               <div className="w-full flex items-center justify-center p-4 border rounded bg-gray-50">
                 <img
                   src={logoPreview}
