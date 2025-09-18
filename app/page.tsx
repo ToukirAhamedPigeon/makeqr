@@ -68,7 +68,7 @@ export default function QRWithLogo() {
 
       if (logoFile) {
         const img = await loadImageFromFile(logoFile);
-        const logoScale = 0.4;
+        const logoScale = 0.25;
         const logoSize = displaySize * logoScale;
 
         const bgPadding = Math.floor(logoSize * 0.02);
