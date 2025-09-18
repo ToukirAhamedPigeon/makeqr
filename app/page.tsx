@@ -9,6 +9,7 @@ import {
   FaMediumM,
   FaTwitter,
   FaQuora,
+  FaGithub
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -259,6 +260,9 @@ export default function QRWithLogo() {
           <div className="flex gap-3 text-gray-500 mb-2 md:mb-0">
             <a href="https://www.linkedin.com/in/toukir-ahamed-09477b28a/" target="_blank" className="hover:text-blue-600 transition-colors">
               <FaLinkedin size={18} />
+            </a>
+            <a href="https://github.com/ToukirAhamedPigeon" target="_blank" className="hover:text-black transition-colors">
+              <FaGithub size={18} />
             </a>
             <a href="https://www.facebook.com/pigeonicsoft" target="_blank" className="hover:text-blue-700 transition-colors">
               <FaFacebookF size={18} />
