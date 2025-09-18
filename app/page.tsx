@@ -37,32 +37,42 @@ export default function QRWithLogo() {
     setGenerating(true);
     try {
       const canvas = canvasRef.current!;
-      const size = 800;
-      canvas.width = size;
-      canvas.height = size;
+      const displaySize = 100; // preview size
+      const qrSize = 800; // internal generation size for quality
+
+      // Set canvas to preview size
+      canvas.width = displaySize;
+      canvas.height = displaySize;
+
+      // Create temporary offscreen canvas for high-res generation
+      const offCanvas = document.createElement("canvas");
+      offCanvas.width = qrSize;
+      offCanvas.height = qrSize;
+
       const opts = {
         errorCorrectionLevel: "H",
         margin: 1,
-        width: size,
-        color: {
-          dark: "#000000",
-          light: "#ffffff",
-        },
+        width: qrSize,
+        color: { dark: "#000000", light: "#ffffff" },
       } as any;
 
-      await QRCode.toCanvas(canvas, value, opts);
+      // Draw high-res QR on offscreen canvas
+      await QRCode.toCanvas(offCanvas, value, opts);
+
+      const ctx = canvas.getContext("2d")!;
+      // Scale down high-res QR onto preview canvas
+      ctx.clearRect(0, 0, displaySize, displaySize);
+      ctx.drawImage(offCanvas, 0, 0, displaySize, displaySize);
 
       if (logoFile) {
         const img = await loadImageFromFile(logoFile);
-
         const logoScale = 0.2;
-        const logoSize = Math.floor(size * logoScale);
+        const logoSize = displaySize * logoScale;
 
-        const ctx = canvas.getContext("2d")!;
         const bgPadding = Math.floor(logoSize * 0.15);
         const bgSize = logoSize + bgPadding * 2;
-        const bgX = Math.floor((size - bgSize) / 2);
-        const bgY = Math.floor((size - bgSize) / 2);
+        const bgX = Math.floor((displaySize - bgSize) / 2);
+        const bgY = Math.floor((displaySize - bgSize) / 2);
         const radius = Math.floor(bgSize * 0.15);
 
         roundRect(ctx, bgX, bgY, bgSize, bgSize, radius, "#ffffff");
@@ -72,8 +82,8 @@ export default function QRWithLogo() {
         let dh = logoSize;
         if (aspect > 1) dh = Math.round(logoSize / aspect);
         else dw = Math.round(logoSize * aspect);
-        const dx = Math.floor((size - dw) / 2);
-        const dy = Math.floor((size - dh) / 2);
+        const dx = Math.floor((displaySize - dw) / 2);
+        const dy = Math.floor((displaySize - dh) / 2);
         ctx.drawImage(img, dx, dy, dw, dh);
       }
     } catch (err: any) {
@@ -83,6 +93,7 @@ export default function QRWithLogo() {
       setGenerating(false);
     }
   }
+
 
   function loadImageFromFile(file: File): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
