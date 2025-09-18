@@ -37,7 +37,7 @@ export default function QRWithLogo() {
     setGenerating(true);
     try {
       const canvas = canvasRef.current!;
-      const displaySize = 100; // preview size
+      const displaySize = 200; // preview size
       const qrSize = 800; // internal generation size for quality
 
       // Set canvas to preview size
