@@ -69,11 +69,11 @@ export default function QRWithLogo() {
         const logoScale = 0.2;
         const logoSize = displaySize * logoScale;
 
-        const bgPadding = Math.floor(logoSize * 0.15);
+        const bgPadding = Math.floor(logoSize * 0.05);
         const bgSize = logoSize + bgPadding * 2;
         const bgX = Math.floor((displaySize - bgSize) / 2);
         const bgY = Math.floor((displaySize - bgSize) / 2);
-        const radius = Math.floor(bgSize * 0.15);
+        const radius = Math.floor(bgSize * 0.1);
 
         roundRect(ctx, bgX, bgY, bgSize, bgSize, radius, "#ffffff");
 
