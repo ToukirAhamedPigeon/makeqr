@@ -227,7 +227,7 @@ export default function QRWithLogo() {
             <div className="w-full flex items-center justify-center p-4 border rounded bg-gray-50">
               <canvas
                 ref={canvasRef}
-                style={{ width: 300, height: 300, imageRendering: "pixelated" }}
+                style={{ width: 256, height: 256, imageRendering: "pixelated" }}
               ></canvas>
             </div>
           </div>
