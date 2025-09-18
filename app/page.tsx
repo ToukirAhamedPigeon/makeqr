@@ -1,103 +1,199 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useRef, useState } from "react";
+import QRCode from "qrcode";
+
+export default function QRWithLogo() {
+  const [value, setValue] = useState("https://example.com");
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError(null);
+    const f = e.target.files?.[0] ?? null;
+    if (f && !f.type.includes("png")) {
+      setError("Please upload a PNG image (transparent PNG recommended).");
+      setLogoFile(null);
+      return;
+    }
+    setLogoFile(f);
+  };
+
+  async function generate() {
+    setError(null);
+    if (!value) {
+      setError("Please enter a URL or text to encode.");
+      return;
+    }
+    setGenerating(true);
+    try {
+      const canvas = canvasRef.current!;
+      const size = 800; // high-res base. We'll scale down for display if needed.
+      canvas.width = size;
+      canvas.height = size;
+      const opts = {
+        errorCorrectionLevel: "H", // high so logo won't break scannability
+        margin: 1,
+        width: size,
+        color: {
+          dark: "#000000",
+          light: "#ffffff",
+        },
+      } as any;
+
+      // Draw base QR to canvas
+      await QRCode.toCanvas(canvas, value, opts);
+
+      // If there's a logo, draw it in the center
+      if (logoFile) {
+        const img = await loadImageFromFile(logoFile);
+
+        // compute logo size: keep it conservative so QR remains scannable
+        const logoScale = 0.20; // logo will be 20% of QR size
+        const logoSize = Math.floor(size * logoScale);
+
+        // draw white rounded background behind logo for contrast
+        const ctx = canvas.getContext("2d")!;
+        const bgPadding = Math.floor(logoSize * 0.15);
+        const bgSize = logoSize + bgPadding * 2;
+        const bgX = Math.floor((size - bgSize) / 2);
+        const bgY = Math.floor((size - bgSize) / 2);
+        const radius = Math.floor(bgSize * 0.15);
+
+        roundRect(ctx, bgX, bgY, bgSize, bgSize, radius, "#ffffff");
+
+        // Draw the logo on top, centered
+        const logoX = Math.floor((size - logoSize) / 2);
+        const logoY = Math.floor((size - logoSize) / 2);
+        // preserve aspect ratio
+        const aspect = img.width / img.height;
+        let dw = logoSize;
+        let dh = logoSize;
+        if (aspect > 1) dh = Math.round(logoSize / aspect);
+        else dw = Math.round(logoSize * aspect);
+        const dx = Math.floor((size - dw) / 2);
+        const dy = Math.floor((size - dh) / 2);
+        ctx.drawImage(img, dx, dy, dw, dh);
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError((err && err.message) || String(err));
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  function loadImageFromFile(file: File): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(img);
+      };
+      img.onerror = (e) => {
+        URL.revokeObjectURL(url);
+        reject(new Error("Failed to load image"));
+      };
+      img.src = url;
+      // Allow cross-origin if user provided data URL; not necessary here
+    });
+  }
+
+  function roundRect(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    w: number,
+    h: number,
+    r: number,
+    fillStyle: string
+  ) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function downloadPNG() {
+    const canvas = canvasRef.current!;
+    const link = document.createElement("a");
+    link.href = canvas.toDataURL("image/png");
+    link.download = "qr-with-logo.png";
+    link.click();
+  }
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen flex items-start justify-center p-6 bg-gray-50">
+      <div className="w-full max-w-3xl bg-white rounded-2xl shadow p-6">
+        <h2 className="text-xl font-semibold mb-4">QR Code Generator — with centered PNG logo</h2>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        <label className="block text-sm font-medium text-gray-700">URL or Text</label>
+        <input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className="mt-1 w-full border rounded px-3 py-2"
+          placeholder="https://example.com"
+        />
+
+        <label className="block text-sm font-medium text-gray-700 mt-4">Upload PNG logo (transparent recommended)</label>
+        <input type="file" accept="image/png" onChange={handleFile} className="mt-1" />
+        {logoFile && <div className="text-sm mt-2">Selected: {logoFile.name}</div>}
+
+        <div className="flex gap-2 mt-6">
+          <button
+            onClick={generate}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            disabled={generating}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            {generating ? "Generating..." : "Generate QR"}
+          </button>
+          <button
+            onClick={downloadPNG}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
           >
-            Read our docs
-          </a>
+            Download PNG
+          </button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {error && <div className="mt-4 text-red-600">{error}</div>}
+
+        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="col-span-1">
+            <div className="text-sm mb-2">Preview (scaled)</div>
+            <div className="w-full flex items-center justify-center p-4 border rounded">
+              <canvas
+                ref={canvasRef}
+                style={{ width: 300, height: 300, imageRendering: "pixelated" }}
+              ></canvas>
+            </div>
+          </div>
+
+          <div className="col-span-1">
+            <div className="text-sm mb-2">Tips</div>
+            <ul className="list-disc ml-5 text-sm text-gray-600">
+              <li>Use a transparent PNG for best results.</li>
+              <li>Large logos may reduce scannability — keep logo size small (20% recommended).</li>
+              <li>If scan fails, regenerate with smaller logoScale or higher contrast.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="mt-6 text-xs text-gray-500">
+          Note: This component uses the <code>qrcode</code> npm package on the client to draw a QR
+          onto a canvas, then overlays a centered PNG. Add <code>npm install qrcode</code> to your
+          project and ensure this component runs client-side.
+        </div>
+      </div>
     </div>
   );
 }
