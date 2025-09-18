@@ -2,8 +2,15 @@
 
 import React, { useRef, useState } from "react";
 import QRCode from "qrcode";
-import { FaLinkedin, FaFacebookF, FaInstagram, FaMediumM, FaTwitter, FaQuora } from "react-icons/fa";
-
+import {
+  FaLinkedin,
+  FaFacebookF,
+  FaInstagram,
+  FaMediumM,
+  FaTwitter,
+  FaQuora,
+} from "react-icons/fa";
+import { motion } from "framer-motion";
 
 export default function QRWithLogo() {
   const [value, setValue] = useState("https://example.com");
@@ -23,11 +30,8 @@ export default function QRWithLogo() {
       return;
     }
     setLogoFile(f);
-    if (f) {
-      setLogoPreview(URL.createObjectURL(f));
-    } else {
-      setLogoPreview(null);
-    }
+    if (f) setLogoPreview(URL.createObjectURL(f));
+    else setLogoPreview(null);
   };
 
   async function generate() {
@@ -39,14 +43,12 @@ export default function QRWithLogo() {
     setGenerating(true);
     try {
       const canvas = canvasRef.current!;
-      const displaySize = 400; // preview size
-      const qrSize = 800; // internal generation size for quality
+      const displaySize = 400;
+      const qrSize = 800;
 
-      // Set canvas to preview size
       canvas.width = displaySize;
       canvas.height = displaySize;
 
-      // Create temporary offscreen canvas for high-res generation
       const offCanvas = document.createElement("canvas");
       offCanvas.width = qrSize;
       offCanvas.height = qrSize;
@@ -58,11 +60,9 @@ export default function QRWithLogo() {
         color: { dark: "#000000", light: "#ffffff" },
       } as any;
 
-      // Draw high-res QR on offscreen canvas
       await QRCode.toCanvas(offCanvas, value, opts);
 
       const ctx = canvas.getContext("2d")!;
-      // Scale down high-res QR onto preview canvas
       ctx.clearRect(0, 0, displaySize, displaySize);
       ctx.drawImage(offCanvas, 0, 0, displaySize, displaySize);
 
@@ -95,7 +95,6 @@ export default function QRWithLogo() {
       setGenerating(false);
     }
   }
-
 
   function loadImageFromFile(file: File): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
@@ -139,26 +138,40 @@ export default function QRWithLogo() {
     const canvas = canvasRef.current!;
     const link = document.createElement("a");
     link.href = canvas.toDataURL("image/png");
-
-    // Add timestamp for uniqueness
-    const timestamp = new Date()
-      .toISOString()
-      .replace(/[-:.TZ]/g, ""); // remove invalid chars for filenames
+    const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, "");
     link.download = `qr-with-logo-${timestamp}.png`;
-
     link.click();
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-1 bg-gray-50">
-      <div className="w-full max-w-3xl bg-white rounded-2xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Liquid Colorful Background */}
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        {/* Top-left blob */}
+        <div className="absolute w-[120%] h-[120%] -top-10 -left-10
+          bg-gradient-to-r from-[#43cea2] to-[#185a9d]
+          animate-spin-slow rounded-full blur-[140px] opacity-70">
+        </div>
+
+        {/* Bottom-right blob */}
+        <div className="absolute w-[120%] h-[120%] -bottom-10 -right-10
+          bg-gradient-to-r from-[#43cea2] to-[#185a9d]
+          animate-spin-slow-reverse rounded-full blur-[140px] opacity-70">
+        </div>
+      </div>
+
+      {/* Floating Form Card */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="w-full max-w-3xl bg-white rounded-xl shadow-2xl p-4 relative z-10"
+      >
+        <h2 className="text-xl font-semibold mb-4 text-center">
           QR Code Generator — with centered PNG logo
         </h2>
 
-        <label className="block text-sm font-medium text-gray-700">
-          URL or Text
-        </label>
+        <label className="block text-sm font-medium text-gray-700">URL or Text</label>
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -166,13 +179,12 @@ export default function QRWithLogo() {
           placeholder="https://example.com"
         />
 
-       <label className="block text-sm font-medium text-gray-700 mt-4">
+        <label className="block text-sm font-medium text-gray-700 mt-4">
           Upload PNG logo (transparent recommended)
-       </label>
+        </label>
 
         <div className="mt-2 flex flex-col md:flex-row">
           <div className="flex gap-3 w-full md:w-[50%] mb-2 md:mb-0">
-            {/* Hidden file input */}
             <input
               id="logoUpload"
               type="file"
@@ -180,8 +192,6 @@ export default function QRWithLogo() {
               onChange={handleFile}
               className="hidden"
             />
-
-            {/* Upload Button */}
             <button
               type="button"
               onClick={() => document.getElementById("logoUpload")?.click()}
@@ -189,17 +199,13 @@ export default function QRWithLogo() {
             >
               Upload Logo
             </button>
-
-            {/* Filename */}
             {logoFile && (
               <span className="text-sm text-gray-600 self-center">
                 Selected: {logoFile.name}
               </span>
             )}
-
           </div>
           <div className="flex gap-3 w-full md:w-[50%] mb-2 md:mb-0 justify-end">
-            {/* Generate Button */}
             <button
               onClick={generate}
               className="cursor-pointer px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -207,8 +213,6 @@ export default function QRWithLogo() {
             >
               {generating ? "Generating..." : "Generate QR"}
             </button>
-
-            {/* Download Button */}
             <button
               onClick={downloadPNG}
               className="cursor-pointer px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
@@ -220,8 +224,12 @@ export default function QRWithLogo() {
 
         {error && <div className="mt-4 text-red-600">{error}</div>}
 
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Logo Preview */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6"
+        >
           {logoPreview && (
             <div className="col-span-1">
               <div className="text-sm mb-2">Logo Preview</div>
@@ -235,20 +243,22 @@ export default function QRWithLogo() {
             </div>
           )}
 
-          {/* QR Preview */}
           <div className="col-span-1">
             <div className="text-sm mb-2">QR Code Preview</div>
             <div className="w-full flex items-center justify-center p-4 border rounded bg-gray-50">
               <canvas
                 ref={canvasRef}
-                style={{ width: 256, height: 256, imageRendering: "pixelated" }}
+                style={{
+                  width: 256,
+                  height: 256,
+                  imageRendering: "pixelated",
+                }}
               ></canvas>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         <div className="mt-6 border-t pt-4 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">
-          {/* Left side */}
           <div className="flex gap-3 text-gray-500">
             <a href="https://www.linkedin.com/in/toukir-ahamed-09477b28a/" target="_blank" className="hover:text-blue-600 transition-colors">
               <FaLinkedin size={18} />
@@ -269,24 +279,11 @@ export default function QRWithLogo() {
               <FaQuora size={18} />
             </a>
           </div>
-          
-
-          {/* Right side: social icons */}
           <div className="mb-2 md:mb-0">
-            Developed by{" "}
-            <a
-              href="https://pigeonic.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
-            >
-              Pigeonic
-            </a>{" "}
-            &copy; 2025 | Version 1.0.0
+            Developed by <a href="https://pigeonic.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Pigeonic</a> &copy; 2025 | Version 1.0.0
           </div>
         </div>
-
-      </div>
+      </motion.div>
     </div>
   );
 }
