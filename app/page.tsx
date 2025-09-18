@@ -176,7 +176,7 @@ export default function QRWithLogo() {
           <button
             type="button"
             onClick={() => document.getElementById("logoUpload")?.click()}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700"
+            className="cursor-pointer px-2 py-1 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700"
           >
             Upload Logo
           </button>
