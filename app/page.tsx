@@ -202,7 +202,7 @@ export default function QRWithLogo() {
               </span>
             )}
           </div>
-          <div className="flex gap-3 w-full md:w-[50%] mb-2 md:mb-0 justify-end">
+          <div className="flex gap-3 w-full md:w-[50%] mb-2 md:mb-0 md:justify-end">
             <button
               onClick={generate}
               className="cursor-pointer px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
@@ -225,7 +225,7 @@ export default function QRWithLogo() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6"
+          className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 "
         >
           {logoPreview && (
             <div className="col-span-1">
@@ -256,7 +256,7 @@ export default function QRWithLogo() {
         </motion.div>
 
         <div className="mt-6 border-t pt-4 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">
-          <div className="flex gap-3 text-gray-500">
+          <div className="flex gap-3 text-gray-500 mb-2 md:mb-0">
             <a href="https://www.linkedin.com/in/toukir-ahamed-09477b28a/" target="_blank" className="hover:text-blue-600 transition-colors">
               <FaLinkedin size={18} />
             </a>
