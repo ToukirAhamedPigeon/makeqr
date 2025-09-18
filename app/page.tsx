@@ -147,18 +147,35 @@ export default function QRWithLogo() {
           placeholder="https://example.com"
         />
 
-        <label className="block text-sm font-medium text-gray-700 mt-4">
+       <label className="block text-sm font-medium text-gray-700 mt-4">
           Upload PNG logo (transparent recommended)
-        </label>
-        <input
-          type="file"
-          accept="image/png"
-          onChange={handleFile}
-          className="mt-1"
-        />
-        {logoFile && (
-          <div className="text-sm mt-2">Selected: {logoFile.name}</div>
-        )}
+       </label>
+
+        <div className="mt-2 flex items-center gap-3">
+          {/* Hidden file input */}
+          <input
+            id="logoUpload"
+            type="file"
+            accept="image/png"
+            onChange={handleFile}
+            className="hidden"
+          />
+
+          {/* Styled upload button */}
+          <button
+            type="button"
+            onClick={() => document.getElementById("logoUpload")?.click()}
+            className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800"
+          >
+            Choose File
+          </button>
+
+          {/* Show filename if selected */}
+          {logoFile && (
+            <span className="text-sm text-gray-600">Selected: {logoFile.name}</span>
+          )}
+        </div>
+
 
         <div className="flex gap-2 mt-6">
           <button
@@ -199,7 +216,7 @@ export default function QRWithLogo() {
             <div className="w-full flex items-center justify-center p-4 border rounded bg-gray-50">
               <canvas
                 ref={canvasRef}
-                style={{ width: 200, height: 200, imageRendering: "pixelated" }}
+                style={{ width: 80, height: 80, imageRendering: "pixelated" }}
               ></canvas>
             </div>
           </div>
