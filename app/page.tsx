@@ -210,7 +210,7 @@ export default function QRWithLogo() {
           {/* Logo Preview */}
           {logoPreview && (
             <div className="col-span-1">
-              <div className="text-sm mb-2">Logo Preview (larger)</div>
+              <div className="text-sm mb-2">Logo Preview</div>
               <div className="w-full flex items-center justify-center p-4 border rounded bg-gray-50">
                 <img
                   src={logoPreview}
@@ -223,7 +223,7 @@ export default function QRWithLogo() {
 
           {/* QR Preview */}
           <div className="col-span-1">
-            <div className="text-sm mb-2">QR Code Preview (smaller)</div>
+            <div className="text-sm mb-2">QR Code Preview</div>
             <div className="w-full flex items-center justify-center p-4 border rounded bg-gray-50">
               <canvas
                 ref={canvasRef}
