@@ -165,19 +165,19 @@ export default function QRWithLogo() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="w-full max-w-3xl bg-white rounded-xl shadow-2xl p-4 relative z-10"
       >
-        <h2 className="text-xl font-semibold mb-4 text-center">
+        <h2 className="text-xl font-bold text-gray-900 mb-4 text-center">
           QR Code Generator — with centered PNG logo
         </h2>
 
-        <label className="block text-sm font-medium text-gray-700">URL or Text</label>
+        <label className="block text-sm font-bold text-gray-900">URL or Text</label>
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          className="mt-1 w-full border rounded px-3 py-2"
+          className="mt-1 w-full border rounded px-3 py-2 font-bold text-gray-900"
           placeholder="https://example.com"
         />
 
-        <label className="block text-sm font-medium text-gray-700 mt-4">
+        <label className="block text-sm font-bold text-gray-900 mt-4">
           Upload PNG logo (transparent recommended)
         </label>
 
@@ -242,7 +242,7 @@ export default function QRWithLogo() {
           )}
 
           <div className="col-span-1">
-            <div className="text-sm mb-2">QR Code Preview</div>
+            <div className="text-sm font-bold text-gray-900 mb-2">QR Code Preview</div>
             <div className="w-full flex items-center justify-center p-4 border rounded bg-gray-50">
               <canvas
                 ref={canvasRef}
